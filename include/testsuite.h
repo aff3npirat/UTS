@@ -15,7 +15,7 @@ namespace {
 using func_t = void (*)();
 
 // wrapper for registered functions
-struct value_t {
+struct test_t {
     std::string key;
     func_t func;
 
@@ -31,7 +31,7 @@ namespace UnitTest {
 namespace detail {
 
     // returns reference to registered functions
-    std::vector<value_t>& registered_functions();
+    std::vector<test_t>& registered_functions();
 
     // registers a new test function
     void register_function(std::string name, func_t function, std::string file, int lnr);
