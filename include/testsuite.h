@@ -48,32 +48,34 @@ void run_tests();
 }  // namespace UnitTest
 
 // two step macro to concat expanded macros
-#define CONCAT_IMPLEMENT(a, b) a##b
-#define CONCAT(a, b) CONCAT_IMPLEMENT(a, b)
+#define _CONCAT_IMPLEMENT(a, b) a##b
+#define _CONCAT(a, b) _CONCAT_IMPLEMENT(a, b)
 
 // main registration macro
-#define TEST_CASE(name)                                                      \
-    static_assert(true, name ""); /* provides more informative error*/       \
-    namespace detail {                                                       \
-        static void CONCAT(_test_, __LINE__)();                              \
-        namespace {                                                          \
-            struct CONCAT(_register_struct_t_, __LINE__) {                   \
-                CONCAT(_register_struct_t_, __LINE__)()                      \
-                {                                                            \
-                    UnitTest::detail::register_function(                     \
-                        name, CONCAT(_test_, __LINE__), __FILE__, __LINE__); \
-                }                                                            \
-            } CONCAT(_register_struct_, __LINE__);                           \
-        } /* namespace */                                                    \
-    } /* namespace detail */                                                 \
-    static void detail::CONCAT(_test_, __LINE__)()
+#define TEST_CASE(name)                                                       \
+    static_assert(true, name ""); /* provides more informative error*/        \
+    namespace detail {                                                        \
+        static void _CONCAT(_test_, __LINE__)();                              \
+        namespace {                                                           \
+            struct _CONCAT(_register_struct_t_, __LINE__) {                   \
+                _CONCAT(_register_struct_t_, __LINE__)()                      \
+                {                                                             \
+                    UnitTest::detail::register_function(                      \
+                        name, _CONCAT(_test_, __LINE__), __FILE__, __LINE__); \
+                }                                                             \
+            } _CONCAT(_register_struct_, __LINE__);                           \
+        } /* namespace */                                                     \
+    } /* namespace detail */                                                  \
+    static void detail::_CONCAT(_test_, __LINE__)()
 
 // macro to get assertion-like strings
-#define ASSERT_MSG(expr)                                                               \
+#define _ASSERT_MSG(expr)                                                              \
     "Assertion failed: " #expr ", file " __FILE__ ", line " + std::to_string(__LINE__)
 
+#define _CHECK_VALUE(expr, value)                                              \
+    if (expr != value) UnitTest::detail::fail_test(_ASSERT_MSG(expr == value))
+
 // check if expr evaluates to true
-#define ASSERT_TRUE(expr)                                    \
-    if (!expr) UnitTest::detail::fail_test(ASSERT_MSG(expr))
+#define ASSERT_TRUE(expr) _CHECK_VALUE(expr, true)
 // check if expr evaluates to false
-#define ASSERT_FALSE(expr) ASSERT_TRUE(!expr)
+#define ASSERT_FALSE(expr) _CHECK_VALUE(expr, false)
