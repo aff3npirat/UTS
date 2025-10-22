@@ -4,7 +4,7 @@
 void UnitTest::run_tests()
 {
     unsigned int numPassed = 0;
-    for (value_t testCase : detail::registered_functions()) {
+    for (test_t testCase : detail::registered_functions()) {
         testErrors.clear();
         testCase.func();
 
@@ -21,19 +21,21 @@ void UnitTest::run_tests()
         }
     }
 
+    testErrors.clear();
+
     printf("%d/%d tests passed\n", numPassed, detail::registered_functions().size());
 }
 
-std::vector<value_t>& UnitTest::detail::registered_functions()
+std::vector<test_t>& UnitTest::detail::registered_functions()
 {
-    static std::vector<value_t> functions;
+    static std::vector<test_t> functions;
     return functions;
 }
 
 void UnitTest::detail::register_function(
     std::string name, func_t function, std::string file, int lnr)
 {
-    std::vector<value_t> funcs = registered_functions();
+    std::vector<test_t> funcs = registered_functions();
 
     if (std::find(funcs.begin(), funcs.end(), name) != funcs.end()) {
         throw std::invalid_argument("Test name '" + name + "' must be unique, file " + file +
