@@ -4,7 +4,7 @@
 void UnitTest::run_tests()
 {
     unsigned int numPassed = 0;
-    for (value_t testCase : Details::registered_functions()) {
+    for (value_t testCase : detail::registered_functions()) {
         testErrors.clear();
         testCase.func();
 
@@ -21,16 +21,16 @@ void UnitTest::run_tests()
         }
     }
 
-    printf("%d/%d tests passed\n", numPassed, Details::registered_functions().size());
+    printf("%d/%d tests passed\n", numPassed, detail::registered_functions().size());
 }
 
-std::vector<value_t>& UnitTest::Details::registered_functions()
+std::vector<value_t>& UnitTest::detail::registered_functions()
 {
     static std::vector<value_t> functions;
     return functions;
 }
 
-void UnitTest::Details::register_function(
+void UnitTest::detail::register_function(
     std::string name, func_t function, std::string file, int lnr)
 {
     std::vector<value_t> funcs = registered_functions();
@@ -43,7 +43,7 @@ void UnitTest::Details::register_function(
     registered_functions().emplace_back(name, function);
 }
 
-void UnitTest::Details::fail_test(std::string msg)
+void UnitTest::detail::fail_test(std::string msg)
 {
     testErrors.push_back(msg);
 }
