@@ -13,7 +13,7 @@ TEST_CASE("SomeClass")
     ASSERT_FALSE(uut.publicFunc(-2));
 }
 
-TEST_CASE("SomeClass2") {}
+TEST_CASE("SomeClass") {}
 
 
 int main()
