@@ -26,11 +26,11 @@ std::vector<std::string> testErrors;
 namespace UnitTest {
 namespace detail {
 
-std::vector<value_t>& registered_functions();
+    std::vector<value_t>& registered_functions();
 
-void register_function(std::string name, func_t function, std::string file, int lnr);
+    void register_function(std::string name, func_t function, std::string file, int lnr);
 
-void fail_test(std::string msg);
+    void fail_test(std::string msg);
 
 }  // namespace detail
 
@@ -41,20 +41,20 @@ void run_tests();
 #define CONCAT_IMPLEMENT(a, b) a##b
 #define CONCAT(a, b) CONCAT_IMPLEMENT(a, b)
 
-#define TEST_CASE(name)                                              \
-    namespace detail {                                               \
-    static_assert(true, name "");                                    \
-    static void CONCAT(_test_, __LINE__)();                          \
-    namespace {                                                      \
-    struct CONCAT(_register_struct_t_, __LINE__) {                   \
-        CONCAT(_register_struct_t_, __LINE__)()                      \
-        {                                                            \
-            UnitTest::detail::register_function(                     \
-                name, CONCAT(_test_, __LINE__), __FILE__, __LINE__); \
-        }                                                            \
-    } CONCAT(_register_struct_, __LINE__);                           \
-    } /* namespace */                                                \
-    } /* namespace detail */                                         \
+#define TEST_CASE(name)                                                      \
+    namespace detail {                                                       \
+        static_assert(true, name "");                                        \
+        static void CONCAT(_test_, __LINE__)();                              \
+        namespace {                                                          \
+            struct CONCAT(_register_struct_t_, __LINE__) {                   \
+                CONCAT(_register_struct_t_, __LINE__)()                      \
+                {                                                            \
+                    UnitTest::detail::register_function(                     \
+                        name, CONCAT(_test_, __LINE__), __FILE__, __LINE__); \
+                }                                                            \
+            } CONCAT(_register_struct_, __LINE__);                           \
+        } /* namespace */                                                    \
+    } /* namespace detail */                                                 \
     static void detail::CONCAT(_test_, __LINE__)()
 
 #define ASSERT_MSG(expr)                                                               \
