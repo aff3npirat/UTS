@@ -4,7 +4,7 @@ set_target_properties(demo
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 target_link_options(demo PUBLIC -static -static-libgcc -static-libstdc++)
-target_link_libraries(demo PUBLIC testsuite_lib)
+target_link_libraries(demo PUBLIC testsuite)
 target_include_directories(
     demo
     PUBLIC
