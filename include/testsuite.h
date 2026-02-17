@@ -93,11 +93,11 @@ std::string to_string_(const std::string& value);
         " got " + UnitTest::to_string_(expr)
 
 #define _CHECK_VALUE(expr, value)                                     \
-    if (expr != value)                                                \
+    if (!(expr == value))                                             \
     throw UnitTest::Detail::AssertException(_ASSERT_MSG(expr, value))
 
 // expr mus evaluate to type bool
-#define ASSERT_TRUE(expr) _CHECK_VALUE(expr, true);
-#define ASSERT_FALSE(expr) _CHECK_VALUE(expr, false);
+#define ASSERT_TRUE(expr) _CHECK_VALUE(expr, true)
+#define ASSERT_FALSE(expr) _CHECK_VALUE(expr, false)
 // value/expr must have stream insert operator (<<) defined
-#define ASSERT_EQUALS(expr, value) _CHECK_VALUE(expr, value);
+#define ASSERT_EQUALS(expr, value) _CHECK_VALUE(expr, value)
