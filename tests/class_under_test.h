@@ -6,6 +6,8 @@ class SomeClass {
     SomeClass();
 
     bool publicFunc(int a);
-    
+
+    void testThrow();
+
     int a;
 };
