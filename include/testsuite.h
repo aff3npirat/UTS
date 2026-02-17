@@ -45,6 +45,11 @@ void register_function(std::string name,
     func_t function,
     std::string file,
     int lnr);
+<<<<<<< HEAD
+=======
+
+void fail_test(std::string msg);
+>>>>>>> e7bc5d1ef228525d50238e5333dfb2f78a42dfc2
 
 }  // namespace detail
 
