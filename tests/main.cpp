@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <string>
 
 #include "class_under_test.h"
 #include "testsuite.h"
@@ -40,6 +41,28 @@ TEST_CASE("Throw")
 
 
 TEST_CASE("Empty Body") {}
+
+
+template<>
+std::string UnitTest::to_string_(const SomeClass& value)
+{
+    return "SomeClass::" + std::to_string(value.a);
+}
+
+bool operator==(const SomeClass& a, const SomeClass& b)
+{
+    return a.a == b.a;
+}
+
+TEST_CASE("Custom Error types")
+{
+    SomeClass a;
+    a.a = 1;
+    SomeClass b;
+    b.a = 2;
+
+    ASSERT_EQUALS(a, b);
+}
 
 
 int main()
