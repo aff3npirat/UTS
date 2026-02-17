@@ -10,8 +10,14 @@
 #include <vector>
 
 
-namespace {
+namespace UnitTest {
 
+/// @brief runs all registered tests and provides summary to @code std::out
+/// @endcode. Tests should be registered using the macro @code TEST_CASE(name)
+/// @endcode with a unique string literal as name.
+void run_tests();
+
+namespace Detail {
 // signature of test functions
 using func_t = void (*)();
 
@@ -22,11 +28,6 @@ struct test_t {
 
     bool operator==(std::string other) { return other == key; }
 };
-
-}  // namespace
-
-namespace UnitTest {
-namespace detail {
 
 class AssertException : public std::exception {
   public:
@@ -47,13 +48,7 @@ void register_function(std::string name,
     std::string file,
     int lnr);
 
-}  // namespace detail
-
-/// @brief runs all registered tests and provides summary to @code std::out
-/// @endcode. Tests should be registered using the macro @code TEST_CASE(name)
-/// @endcode with a unique string literal as name.
-void run_tests();
-
+}  // namespace Detail
 }  // namespace UnitTest
 
 // two step macro to concat expanded macros
@@ -63,21 +58,19 @@ void run_tests();
 // main registration macro
 #define TEST_CASE(name)                                                \
     static_assert(true, name ""); /* provides more informative error*/ \
-    namespace detail {                                                 \
+    namespace UnitTest::TestCases {                                    \
     static void _CONCAT(_test_, __LINE__)();                           \
-    namespace {                                                        \
     struct _CONCAT(_register_struct_t_, __LINE__) {                    \
         _CONCAT(_register_struct_t_, __LINE__)()                       \
         {                                                              \
-            UnitTest::detail::register_function(name,                  \
+            UnitTest::Detail::register_function(name,                  \
                 _CONCAT(_test_, __LINE__), __FILE__, __LINE__);        \
         }                                                              \
     } _CONCAT(_register_struct_, __LINE__);                            \
-    } /* namespace */                                                  \
-    } /* namespace detail */                                           \
-    static void detail::_CONCAT(_test_, __LINE__)()
+    } /* namespace UnitTest::Detail::TestCases */                      \
+    static void UnitTest::TestCases::_CONCAT(_test_, __LINE__)()
 
-namespace {
+namespace UnitTest {
 template<typename T>
 std::string to_string_(const T& value)
 {
@@ -87,20 +80,18 @@ std::string to_string_(const T& value)
 }
 
 template<>
-std::string to_string_(const bool& value)
-{
-    return value ? "true" : "false";
-}
-}  // namespace
+std::string to_string_(const bool& value);
+}  // namespace UnitTest
 
 // macro to get assertion-like strings
-#define _ASSERT_MSG(expr, value)                                          \
-    "File " __FILE__ ", line " + std::to_string(__LINE__) +               \
-        ": Assertion Failed, expected " #value " got " + to_string_(expr)
+#define _ASSERT_MSG(expr, value)                            \
+    "File " __FILE__ ", line " + std::to_string(__LINE__) + \
+        ": Assertion Failed, expected " #value " got " +    \
+        UnitTest::to_string_(expr)
 
 #define _CHECK_VALUE(expr, value)                                     \
     if (expr != value)                                                \
-    throw UnitTest::detail::AssertException(_ASSERT_MSG(expr, value))
+    throw UnitTest::Detail::AssertException(_ASSERT_MSG(expr, value))
 
 // expr mus evaluate to type bool
 #define ASSERT_TRUE(expr) _CHECK_VALUE(expr, true);

@@ -4,10 +4,12 @@
 #include <string>
 
 
-void UnitTest::run_tests()
+namespace UnitTest {
+
+void run_tests()
 {
     unsigned int numPassed = 0;
-    for (test_t testCase : detail::registered_functions()) {
+    for (Detail::test_t testCase : Detail::registered_functions()) {
         std::string name = testCase.key;
         try {
             testCase.func();
@@ -20,16 +22,23 @@ void UnitTest::run_tests()
     }
 
     printf("%d/%d tests passed\n", numPassed,
-        detail::registered_functions().size());
+        Detail::registered_functions().size());
 }
 
-std::vector<test_t>& UnitTest::detail::registered_functions()
+template<>
+std::string to_string_(const bool& value)
+{
+    return value ? "true" : "false";
+}
+
+namespace Detail {
+std::vector<test_t>& registered_functions()
 {
     static std::vector<test_t> functions;
     return functions;
 }
 
-void UnitTest::detail::register_function(std::string name,
+void register_function(std::string name,
     func_t function,
     std::string file,
     int lnr)
@@ -44,3 +53,6 @@ void UnitTest::detail::register_function(std::string name,
 
     registered_functions().emplace_back(name, function);
 }
+
+}  // namespace Detail
+}  // namespace UnitTest
