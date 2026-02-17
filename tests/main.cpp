@@ -16,11 +16,19 @@ TEST_CASE("Assert_1")
 
 TEST_CASE("Assert_2")
 {
-    SomeClass uut;
-    uut.publicFunc(20);
+    int a = 20;
 
-    ASSERT_EQUALS(uut.a, 20);
-    ASSERT_EQUALS(uut.a, 25);
+    ASSERT_EQUALS(a, 20);
+    ASSERT_EQUALS(a, 25);
+}
+
+
+TEST_CASE("Assert_3")
+{
+    int a = 0;
+    int b = 1;
+
+    ASSERT_EQUALS(a, b);
 }
 
 

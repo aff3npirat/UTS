@@ -31,6 +31,12 @@ std::string to_string_(const bool& value)
     return value ? "true" : "false";
 }
 
+template<>
+std::string to_string_(const std::string& value)
+{
+    return value;
+}
+
 namespace Detail {
 std::vector<test_t>& registered_functions()
 {

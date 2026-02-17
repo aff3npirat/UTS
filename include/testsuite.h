@@ -81,13 +81,16 @@ std::string to_string_(const T& value)
 
 template<>
 std::string to_string_(const bool& value);
+
+template<>
+std::string to_string_(const std::string& value);
 }  // namespace UnitTest
 
 // macro to get assertion-like strings
-#define _ASSERT_MSG(expr, value)                            \
-    "File " __FILE__ ", line " + std::to_string(__LINE__) + \
-        ": Assertion Failed, expected " #value " got " +    \
-        UnitTest::to_string_(expr)
+#define _ASSERT_MSG(expr, value)                                        \
+    "File " __FILE__ ", line " + std::to_string(__LINE__) +             \
+        ": Assertion Failed, expected " + UnitTest::to_string_(value) + \
+        " got " + UnitTest::to_string_(expr)
 
 #define _CHECK_VALUE(expr, value)                                     \
     if (expr != value)                                                \
