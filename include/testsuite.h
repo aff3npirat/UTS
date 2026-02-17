@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstdio>
 #include <exception>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -76,15 +77,33 @@ void run_tests();
     } /* namespace detail */                                           \
     static void detail::_CONCAT(_test_, __LINE__)()
 
+namespace {
+template<typename T>
+std::string to_string_(const T& value)
+{
+    std::ostringstream ss;
+    ss << value;
+    return ss.str();
+}
+
+template<>
+std::string to_string_(const bool& value)
+{
+    return value ? "true" : "false";
+}
+}  // namespace
+
 // macro to get assertion-like strings
-#define _ASSERT_MSG(expr, value)                                              \
-    "File " __FILE__ ", line " + std::to_string(__LINE__) +                   \
-        ": Assertion Failed, expected " #value " got " + std::to_string(expr)
+#define _ASSERT_MSG(expr, value)                                          \
+    "File " __FILE__ ", line " + std::to_string(__LINE__) +               \
+        ": Assertion Failed, expected " #value " got " + to_string_(expr)
 
 #define _CHECK_VALUE(expr, value)                                     \
     if (expr != value)                                                \
     throw UnitTest::detail::AssertException(_ASSERT_MSG(expr, value))
 
+// expr mus evaluate to type bool
 #define ASSERT_TRUE(expr) _CHECK_VALUE(expr, true);
 #define ASSERT_FALSE(expr) _CHECK_VALUE(expr, false);
+// value/expr must have stream insert operator (<<) defined
 #define ASSERT_EQUALS(expr, value) _CHECK_VALUE(expr, value);
