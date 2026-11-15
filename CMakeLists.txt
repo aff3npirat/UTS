@@ -9,11 +9,8 @@ include(GNUInstallDirs)
 add_library(testsuite ${CMAKE_CURRENT_SOURCE_DIR}/source/testsuite.cpp)
 target_include_directories(
     testsuite
-    PRIVATE
+    PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-set_target_properties(testsuite PROPERTIES
-    PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/UTS/testsuite.h 
 )
 
 option(UTS_BUILD_TESTS "Build tests" OFF)
