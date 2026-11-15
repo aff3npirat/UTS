@@ -13,7 +13,7 @@ target_include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 set_target_properties(testsuite PROPERTIES
-    PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/testsuite.h 
+    PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/UTS/testsuite.h 
 )
 
 option(UTS_BUILD_TESTS "Build tests" OFF)

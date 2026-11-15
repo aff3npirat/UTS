@@ -2,7 +2,7 @@ A Library for C++ unit tests using Macros for test case registration.
 
 # Example Usage
 ```c++
-#include <testsuite.h>
+#include "UTS/testsuite.h"
 
 int func_to_test() {...}
 
